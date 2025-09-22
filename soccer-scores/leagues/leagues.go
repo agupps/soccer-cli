@@ -5,9 +5,9 @@ type ApiResponse struct {
 }
 
 type leagueInfo struct {
-	League  league      `json:"league"`
-	Country country     `json:"country"`
-	Seasons interface{} `json:"seasons"`
+	League  league  `json:"league"`
+	Country country `json:"country"`
+	Seasons any     `json:"seasons"`
 }
 
 type league struct {
