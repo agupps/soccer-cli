@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"intro-project/soccer-scores/config"
 	"intro-project/soccer-scores/leagues"
 	"intro-project/soccer-scores/teams"
 	"io"
@@ -14,18 +15,16 @@ import (
 )
 
 func main() {
-	viper.SetConfigName("config")
-
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
+	c := &config.Config{}
+	if err := c.Parse(); err != nil {
+		panic(err)
+	}
 
 	err := viper.ReadInConfig()
 	if err != nil {
 		fmt.Printf("Error reading config file, %s", err)
 		return
 	}
-
-	apiKey := viper.GetString("apiKey")
 
 	apiURL := "https://v3.football.api-sports.io/leagues"
 	method := "GET"
@@ -37,7 +36,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	req.Header.Add("x-rapidapi-key", apiKey)
+	req.Header.Add("x-rapidapi-key", c.Secret)
 	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
 
 	res, err := client.Do(req)
@@ -70,7 +69,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	req.Header.Add("x-rapidapi-key", apiKey)
+	req.Header.Add("x-rapidapi-key", c.Secret)
 	req.Header.Add("x-rapidapi-host", "v3.football.api-sports.io")
 	// Create a new URL.Values map
 	params := url.Values{}
